@@ -1,0 +1,24 @@
+{
+  "name": "quill-sharedb-cursors",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Pedro Machado Santa <pedro.santa@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrosanta/quill-sharedb-cursors.git"
+  },
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.16.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.0",
+    "express": "~4.14.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "node-sass-middleware": "0.9.8",
+    "serve-favicon": "~2.3.2"
+  }
+}
