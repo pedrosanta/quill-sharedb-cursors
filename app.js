@@ -26,6 +26,7 @@ app.use(require('node-sass-middleware')({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules/quill/dist')));
 
 app.use('/', index);
 app.use('/users', users);
