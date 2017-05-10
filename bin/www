@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app').app;
 var debug = require('debug')('quill-sharedb-cursors:server');
 var http = require('http');
 
@@ -16,10 +16,10 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Get HTTP server.
  */
 
-var server = http.createServer(app);
+var server = require('../app').server;
 
 /**
  * Listen on provided port, on all network interfaces.
