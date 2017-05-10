@@ -3,3 +3,7 @@ extends layout
 block content
   h1 Collaborative editing example with Quill and cursors
   #editor
+
+block scripts
+  script.
+    var socket = io.connect('http://localhost:3000');

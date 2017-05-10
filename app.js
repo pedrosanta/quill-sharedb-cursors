@@ -28,6 +28,9 @@ app.use(express.static(path.join(__dirname, 'node_modules/quill/dist')));
 
 app.use(require('./controllers'));
 
+// setup websockets/sockets.io server
+require('./helpers/socketio-server')(server);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
