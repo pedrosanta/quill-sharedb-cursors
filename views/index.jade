@@ -6,4 +6,7 @@ block content
 
 block scripts
   script.
-    var socket = io.connect('http://localhost:3000/ot');
+    var socket = io.connect('http://localhost:3000/ot', {
+      upgrade: false,
+      transports: ['websocket']
+    });

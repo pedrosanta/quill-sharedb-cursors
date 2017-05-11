@@ -7,7 +7,9 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var server = require('http').Server(app);
-var socketServer = require('socket.io')(server);
+var socketServer = require('socket.io')(server, {
+  transports: ['websocket']
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
