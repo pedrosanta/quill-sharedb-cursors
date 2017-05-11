@@ -1,4 +1,5 @@
 var Duplex = require('stream').Duplex;
+var shareDBServer = require('./sharedb-server');
 
 module.exports = function(socket) {
   console.log('New connection, socket:', socket.id);
@@ -40,4 +41,5 @@ module.exports = function(socket) {
   });
 
   // Start ShareDB stream listening
+  shareDBServer.listen(stream);
 };

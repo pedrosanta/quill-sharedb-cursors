@@ -22,6 +22,7 @@
     "quill": "^1.2.4",
     "serve-favicon": "~2.3.2",
     "sharedb": "^1.0.0-beta.7",
+    "sharedb-mongo": "^1.0.0-beta.3",
     "socket.io": "^2.0.1"
   }
 }
