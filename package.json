@@ -29,6 +29,7 @@
     "sharedb": "^1.0.0-beta.7",
     "sharedb-mongo": "^1.0.0-beta.3",
     "uuid": "^3.0.1",
+    "webpack": "^2.5.1",
     "websocket-json-stream": "0.0.3",
     "ws": "^2.3.1"
   },
