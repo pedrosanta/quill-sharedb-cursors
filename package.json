@@ -9,6 +9,7 @@
     "url": "git+https://github.com/pedrosanta/quill-sharedb-cursors.git"
   },
   "scripts": {
+    "build": "./node_modules/.bin/webpack",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -20,9 +21,13 @@
     "morgan": "~1.7.0",
     "node-sass-middleware": "0.9.8",
     "quill": "^1.2.4",
+    "rich-text": "^3.1.0",
     "serve-favicon": "~2.3.2",
     "sharedb": "^1.0.0-beta.7",
     "sharedb-mongo": "^1.0.0-beta.3",
     "socket.io": "^2.0.1"
+  },
+  "devDependencies": {
+    "webpack": "^2.5.1"
   }
 }
