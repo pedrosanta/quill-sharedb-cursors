@@ -7,9 +7,6 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var server = require('http').Server(app);
-var socketServer = require('socket.io')(server, {
-  transports: ['websocket']
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,8 +28,8 @@ app.use(express.static(path.join(__dirname, 'node_modules/quill/dist')));
 
 app.use(require('./controllers'));
 
-// setup websockets/socket.io server handlers
-socketServer.of('/ot').on('connection', require('./helpers/sharedb-socket-handler'));
+// init websockets servers
+var wssShareDB = require('./helpers/wss-sharedb')(server);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

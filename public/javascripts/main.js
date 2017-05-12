@@ -3,12 +3,9 @@ var Quill = require('quill');
 
 ShareDB.types.register(require('rich-text').type);
 
-var socket = io.connect('http://localhost:3000/ot', {
-  upgrade: false,
-  transports: ['websocket']
-});
+var shareDBSocket = new WebSocket('ws://' + window.location.host + '/sharedb');
 
-var shareDBConnection = new ShareDB.Connection(socket);
+var shareDBConnection = new ShareDB.Connection(shareDBSocket);
 
 var quill = new Quill('#editor', {
   theme: 'snow'
@@ -24,11 +21,10 @@ doc.subscribe(function (err) {
     doc.create([{insert: '\n'}], 'rich-text');
 
   // update editor contents
-  quill.setContent(doc.data);
+  quill.setContents(doc.data);
 
   // local -> server
   quill.on('text-change', function(delta, oldDelta, source) {
-    console.log(delta, oldDelta, source);
     if(source == 'user') {
       doc.submitOp(delta, {source: quill}, function (err) {
         if(err)
@@ -39,7 +35,7 @@ doc.subscribe(function (err) {
 
   // server -> local
   doc.on('op', function(op, source) {
-    if (source !== quill);
+    if (source !== quill)
       quill.updateContents(op);
   });
 });
