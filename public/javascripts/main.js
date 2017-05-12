@@ -5,7 +5,7 @@ var cursors = require('./cursors');
 
 ShareDB.types.register(require('rich-text').type);
 
-var shareDBSocket = new WebSocket('ws://' + window.location.host + '/sharedb');
+var shareDBSocket = new WebSocket('wss://' + window.location.host + '/sharedb');
 
 var shareDBConnection = new ShareDB.Connection(shareDBSocket);
 
