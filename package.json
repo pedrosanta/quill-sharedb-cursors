@@ -9,8 +9,8 @@
     "url": "git+https://github.com/pedrosanta/quill-sharedb-cursors.git"
   },
   "scripts": {
-    "postinstall": "npm run build",
-    "build": "./node_modules/.bin/webpack",
+    "postinstall": "./node_modules/.bin/webpack",
+    "build": "./node_modules/.bin/webpack -w",
     "start": "node ./bin/www"
   },
   "dependencies": {
