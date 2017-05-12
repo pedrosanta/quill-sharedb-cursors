@@ -4,8 +4,7 @@ var shareDBServer = require('./sharedb-server');
 
 module.exports = function(server) {
   var wss = new WebSocket.Server({
-    server: server,
-    path: '/sharedb'
+    noServer: true
   });
 
   wss.on('connection', function(ws, req) {

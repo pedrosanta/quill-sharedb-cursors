@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var url = require('url');
 
 var app = express();
 var server = require('http').Server(app);
@@ -25,11 +26,29 @@ app.use(require('node-sass-middleware')({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/quill/dist')));
+app.use(express.static(path.join(__dirname, 'node_modules/quill-cursors/dist')));
 
 app.use(require('./controllers'));
 
 // init websockets servers
 var wssShareDB = require('./helpers/wss-sharedb')(server);
+var wssCursors = require('./helpers/wss-cursors')(server);
+
+server.on('upgrade', (request, socket, head) => {
+  const pathname = url.parse(request.url).pathname;
+
+  if (pathname === '/sharedb') {
+    wssShareDB.handleUpgrade(request, socket, head, (ws) => {
+      wssShareDB.emit('connection', ws);
+    });
+  } else if (pathname === '/cursors') {
+    wssCursors.handleUpgrade(request, socket, head, (ws) => {
+      wssCursors.emit('connection', ws);
+    });
+  } else {
+    socket.destroy();
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
