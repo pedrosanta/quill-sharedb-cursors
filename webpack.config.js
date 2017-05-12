@@ -10,7 +10,5 @@ module.exports = {
 
   externals: {
     quill: 'Quill'
-  },
-
-  watch: true
+  }
 };
