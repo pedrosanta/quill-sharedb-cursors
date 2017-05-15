@@ -1,6 +1,7 @@
 var WebSocket = require('ws');
 var _ = require('lodash');
 var uuid = require('uuid');
+var debug = require('debug')('quill-sharedb-cursors:cursors');
 
 module.exports = function(server) {
 
@@ -26,7 +27,9 @@ module.exports = function(server) {
     // generate an id for the socket
     var wsId = uuid();
 
-    ws.on('message', function (data) {
+    debug('A new client (%s) connected.', wsId);
+
+    ws.on('message', function(data) {
       var connectionIndex;
 
       data = JSON.parse(data);
@@ -74,11 +77,16 @@ module.exports = function(server) {
       }
     });
 
-    ws.on('close', function() {
+    ws.on('close', function(code, reason) {
+
+      debug('Client connection closed (%s). (Code: %s, Reason: %s)', wsId, code, reason);
+
       // Find connection index and remove it from hashtable
       if (~(connectionIndex = _.findIndex(connections, {
           'id': wsId
         }))) {
+
+        debug('Connection removed:\n%O', connections[connectionIndex]);
 
         connections.splice(connectionIndex, 1);
       }
@@ -88,6 +96,17 @@ module.exports = function(server) {
 
       // Notify all connections
       notifyConnections(wsId);
+    });
+
+    ws.on('error', function(error) {
+      debug('Client connection errored (%s). (Error: %s)', wsId, error);
+
+      if (~(connectionIndex = _.findIndex(connections, {
+          'id': wsId
+        }))) {
+
+        debug('Errored connection:\n%O', connections[connectionIndex]);
+      }
     });
 
   });

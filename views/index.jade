@@ -1,9 +1,21 @@
 extends layout
 
 block content
-  h1 Collaborative editing example with Quill and cursors
-  p
-    | (writing as 
-    span#author-name
-    | )
-  #editor
+  .layout
+    .info-container
+      h1.title quill-sharedb-cursors
+      p Collaborative editing example with Quill and cursors.
+      
+      #connect-panel
+        h4 Username
+        p
+          | Set your username and connect to edit:
+          br
+          input#username-input(type='text')
+          br
+          button#connect-btn Connect
+      #users-panel
+        h4 Users editing
+        ul#users-list
+    .editor-container
+      #editor

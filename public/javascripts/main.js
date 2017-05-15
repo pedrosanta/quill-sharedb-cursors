@@ -5,7 +5,7 @@ var cursors = require('./cursors');
 
 ShareDB.types.register(require('rich-text').type);
 
-var shareDBSocket = new WebSocket('wss://' + window.location.host + '/sharedb');
+var shareDBSocket = new WebSocket('ws://' + window.location.host + '/sharedb');
 
 var shareDBConnection = new ShareDB.Connection(shareDBSocket);
 
@@ -15,12 +15,11 @@ var quill = window.quill = new Quill('#editor', {
     cursors: {
       autoRegisterListener: false
     }
-  }
+  },
+  readOnly: true
 });
 
 var doc = shareDBConnection.get('documents', 'foobar');
-
-document.getElementById('author-name').innerHTML = cursors.localConnection.name;
 
 var cursorsModule = quill.getModule('cursors');
 
@@ -52,6 +51,8 @@ doc.subscribe(function(err) {
         if (err)
           console.error('Submit OP returned an error:', err);
       });
+
+      updateUserList();
     }
   });
 
@@ -59,8 +60,10 @@ doc.subscribe(function(err) {
 
   // server -> local
   doc.on('op', function(op, source) {
-    if (source !== quill)
+    if (source !== quill) {
       quill.updateContents(op);
+      updateUserList();
+    }
   });
 
   //
@@ -70,13 +73,14 @@ doc.subscribe(function(err) {
   }
 
   function updateCursors(source) {
-    var activeConnections = {};
+    var activeConnections = {}
+      updateAll = Object.keys(cursorsModule.cursors).length == 0;
 
     cursors.connections.forEach(function(connection) {
       if (connection.id != cursors.localConnection.id) {
 
-        // Update cursor that sent the update, source
-        if (connection.id == source.id && connection.range) {
+        // Update cursor that sent the update, source (or update all if we're initting)
+        if ((connection.id == source.id || updateAll) && connection.range) {
           cursorsModule.setCursor(
             connection.id,
             connection.range,
@@ -92,7 +96,6 @@ doc.subscribe(function(err) {
 
     // Clear 'disconnected' cursors
     Object.keys(cursorsModule.cursors).forEach(function(cursorId) {
-
       if (!activeConnections[cursorId]) {
         cursorsModule.removeCursor(cursorId);
       }
@@ -111,5 +114,59 @@ doc.subscribe(function(err) {
     });
 
     updateCursors(e.detail.source);
+    updateUserList();
   });
+
+  updateCursors(cursors.localConnection);
+});
+
+var usernameInputEl = document.getElementById('username-input');
+var usersListEl = document.getElementById('users-list');
+
+function updateUserList() {
+  // Wipe the slate clean
+  usersListEl.innerHTML = null;
+
+  cursors.connections.forEach(function(connection) {
+    var userItemEl = document.createElement('li');
+    var userNameEl = document.createElement('div');
+    var userDataEl = document.createElement('div');
+
+    userNameEl.innerHTML = '<strong>' + (connection.name || '(Waiting for username...)') + '</strong>';
+    userNameEl.classList.add('user-name');
+
+    if(connection.id == cursors.localConnection.id)
+      userNameEl.innerHTML += ' (You)';
+
+    if (connection.range) {
+
+      if(connection.id == cursors.localConnection.id)
+        connection.range = quill.getSelection();
+
+      userDataEl.innerHTML = [
+        '<div class="user-data">',
+        '  <div>Index: ' + connection.range.index + '</div>',
+        '  <div>Length: ' + connection.range.length + '</div>',
+        '</div>'
+      ].join('');
+    } else
+      userDataEl.innerHTML = '(Not focusing on editor.)';
+
+
+    userItemEl.appendChild(userNameEl);
+    userItemEl.appendChild(userDataEl);
+
+    userItemEl.style.backgroundColor = connection.color;
+    usersListEl.appendChild(userItemEl);
+  });
+}
+
+usernameInputEl.value = chance.name();
+
+document.getElementById('connect-btn').addEventListener('click', function(event) {
+  cursors.localConnection.name = usernameInputEl.value;
+  cursors.update();
+  quill.enable();
+  document.getElementById('connect-panel').style.display = 'none';
+  document.getElementById('users-panel').style.display = 'block';
 });

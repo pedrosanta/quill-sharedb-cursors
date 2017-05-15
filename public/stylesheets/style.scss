@@ -6,3 +6,61 @@ body {
 a {
   color: #00B7FF;
 }
+
+input#username-input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+button#connect-btn {
+  width: 100%;
+}
+
+.title {
+  margin-top: 0;
+}
+
+.layout {
+  display: flex;
+}
+
+.info-container {
+  width: 20%;
+  min-width: 150px;
+  margin-right: 50px;
+}
+
+.editor-container {
+  flex-grow: 1;
+}
+
+#users-panel {
+  display: none;
+}
+
+#users-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+#users-panel ul > li {
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+#users-panel .user-name {
+  margin-bottom: 5px;
+}
+
+#users-panel .user-data {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#users-panel .user-data > div {
+  flex-grow: 1;
+}
