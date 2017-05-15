@@ -106,4 +106,12 @@ cursors.socket.onmessage = function(message) {
   }));
 };
 
+cursors.socket.onclose = function (event) {
+  console.log('[cursors] Socket closed. Event:', event);
+};
+
+cursors.socket.onerror = function (event) {
+  console.log('[cursors] Error on socket. Event:', event);
+};
+
 module.exports = cursors;
