@@ -120,6 +120,8 @@ doc.subscribe(function(err) {
   updateCursors(cursors.localConnection);
 });
 
+window.cursors = cursors;
+
 var usernameInputEl = document.getElementById('username-input');
 var usersListEl = document.getElementById('users-list');
 

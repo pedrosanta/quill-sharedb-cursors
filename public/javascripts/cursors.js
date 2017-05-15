@@ -12,11 +12,13 @@ cursors.socket = new WebSocket('ws://' + window.location.host + '/cursors');
 // Init a blank user connection to store local conn data
 cursors.localConnection = new CursorConnection(
   null,
-  chance.color({format: 'hex'})
+  chance.color({
+    format: 'hex'
+  })
 );
 
 // Update
-cursors.update = function () {
+cursors.update = function() {
   cursors.socket.send(JSON.stringify(cursors.localConnection));
 };
 
@@ -38,38 +40,58 @@ cursors.socket.onmessage = function(message) {
   data = JSON.parse(message.data);
 
   var source = {},
-    removedConnections = []
-    forceUpdate = false;
+    removedConnections = [],
+    forceUpdate = false,
+    reportNewConnections = true;
 
-  if(!cursors.localConnection.id)
+  if (!cursors.localConnection.id)
     forceUpdate = true;
 
   // Refresh local connection ID (because session ID might have changed because server restarts, crashes, etc.)
   cursors.localConnection.id = data.id;
 
-  if(forceUpdate) {
+  if (forceUpdate) {
     cursors.update();
     return;
   }
 
   // Find removed connections
   for (var i = 0; i < cursors.connections.length; i++) {
-    if (!data.connections.find(function(connection) {
-        return connection.id == cursors.connections[i].id;
-      })) {
+    var testConnection = data.connections.find(function(connection) {
+      return connection.id == cursors.connections[i].id;
+    });
+
+    if (!testConnection) {
 
       removedConnections.push(cursors.connections[i]);
+      console.log('[cursors] User disconnected:', cursors.connections[i]);
 
       // If the source connection was removed set it
       if (data.sourceId == cursors.connections[i])
         source = cursors.connections[i];
+    } else if (testConnection.name && !cursors.connections[i].name) {
+      console.log('[cursors] User ' + testConnection.id + ' set username:', testConnection.name);
+      console.log('[cursors] Connections after username update:', data.connections);
     }
+  }
+
+  if (cursors.connections.length == 0 && data.connections.length != 0) {
+    console.log('[cursors] Initial list of connections received from server:', data.connections);
+    reportNewConnections = false;
   }
 
   for (var i = 0; i < data.connections.length; i++) {
     // Set the source if it's still on active connections
     if (data.sourceId == data.connections[i].id)
       source = data.connections[i];
+
+    if (reportNewConnections && !cursors.connections.find(function(connection) {
+        return connection.id == data.connections[i].id
+      })) {
+
+      console.log('[cursors] User connected:', data.connections[i]);
+      console.log('[cursors] Connections after new user:', data.connections);
+    }
   }
 
   // Update connections array
