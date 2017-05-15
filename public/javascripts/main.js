@@ -164,11 +164,15 @@ function updateUserList() {
 }
 
 usernameInputEl.value = chance.name();
+usernameInputEl.focus();
+usernameInputEl.select();
 
-document.getElementById('connect-btn').addEventListener('click', function(event) {
+document.getElementById('username-form').addEventListener('submit', function(event) {
   cursors.localConnection.name = usernameInputEl.value;
   cursors.update();
   quill.enable();
   document.getElementById('connect-panel').style.display = 'none';
   document.getElementById('users-panel').style.display = 'block';
+  event.preventDefault();
+  return false;
 });

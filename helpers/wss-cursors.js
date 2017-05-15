@@ -34,8 +34,6 @@ module.exports = function(server) {
 
       data = JSON.parse(data);
 
-      console.log('[wss-cursors][' + wsId + '] Received message', data);
-
       // If a connection id isn't still set
       // we keep sending id along with an empty connections array
       if (!data.id) {
@@ -71,6 +69,8 @@ module.exports = function(server) {
           // Update connection data
           connections[connectionIndex] = data;
         }
+
+        debug('Connection update received:\n%O', data);
 
         // Notify all sessions
         notifyConnections(data.id);
