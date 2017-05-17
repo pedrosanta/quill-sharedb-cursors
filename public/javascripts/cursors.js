@@ -7,7 +7,7 @@ function CursorConnection(name, color) {
 }
 
 // Create browserchannel socket
-cursors.socket = new WebSocket('wss://' + window.location.host + '/cursors');
+cursors.socket = new WebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/cursors');
 
 // Init a blank user connection to store local conn data
 cursors.localConnection = new CursorConnection(

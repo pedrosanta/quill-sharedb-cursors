@@ -5,7 +5,7 @@ var cursors = require('./cursors');
 
 ShareDB.types.register(require('rich-text').type);
 
-var shareDBSocket = new WebSocket('wss://' + window.location.host + '/sharedb');
+var shareDBSocket = new WebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/sharedb');
 
 var shareDBConnection = new ShareDB.Connection(shareDBSocket);
 
@@ -73,7 +73,7 @@ doc.subscribe(function(err) {
   }
 
   function updateCursors(source) {
-    var activeConnections = {}
+    var activeConnections = {},
       updateAll = Object.keys(cursorsModule.cursors).length == 0;
 
     cursors.connections.forEach(function(connection) {
@@ -137,12 +137,12 @@ function updateUserList() {
     userNameEl.innerHTML = '<strong>' + (connection.name || '(Waiting for username...)') + '</strong>';
     userNameEl.classList.add('user-name');
 
-    if(connection.id == cursors.localConnection.id)
+    if (connection.id == cursors.localConnection.id)
       userNameEl.innerHTML += ' (You)';
 
     if (connection.range) {
 
-      if(connection.id == cursors.localConnection.id)
+      if (connection.id == cursors.localConnection.id)
         connection.range = quill.getSelection();
 
       userDataEl.innerHTML = [
