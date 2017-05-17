@@ -29,6 +29,8 @@ module.exports = function(server) {
 
     debug('A new client (%s) connected.', wsId);
 
+    ws.isAlive = true;
+
     ws.on('message', function(data) {
       var connectionIndex;
 
@@ -109,7 +111,23 @@ module.exports = function(server) {
       }
     });
 
+    ws.on('pong', function(data, flags) {
+      debug('Pong received. (%s)', wsId);
+      ws.isAlive = true;
+    });
+
   });
+
+  // Sockets Ping, Keep Alive
+  setInterval(function() {
+    wss.clients.forEach(function(ws) {
+      if (ws.isAlive === false) return ws.terminate();
+
+      ws.isAlive = false;
+      ws.ping('', false, true);
+      debug('Ping sent.');
+    });
+  }, 30000);
 
   return wss;
 };
