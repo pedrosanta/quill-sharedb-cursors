@@ -24,6 +24,7 @@
     "node-sass-middleware": "0.9.8",
     "quill": "^1.2.4",
     "quill-cursors": "^0.1.0",
+    "reconnectingwebsocket": "^1.0.0",
     "rich-text": "^3.1.0",
     "serve-favicon": "~2.3.2",
     "sharedb": "^1.0.0-beta.7",

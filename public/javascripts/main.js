@@ -1,11 +1,12 @@
 var ShareDB = require('sharedb/lib/client');
 var Quill = require('quill');
 var QuillCursors = require('quill-cursors');
+var ReconnectingWebSocket = require('reconnectingwebsocket');
 var cursors = require('./cursors');
 
 ShareDB.types.register(require('rich-text').type);
 
-var shareDBSocket = new WebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/sharedb');
+var shareDBSocket = new ReconnectingWebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/sharedb');
 
 var shareDBConnection = new ShareDB.Connection(shareDBSocket);
 
