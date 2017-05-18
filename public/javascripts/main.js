@@ -181,5 +181,5 @@ document.getElementById('username-form').addEventListener('submit', function(eve
 // DEBUG
 
 shareDBConnection.on('state', function (state, reason) {
-  console.log('[sharedb connection] New state:' + event + ' Reason:' + reason);
+  console.log('[sharedb connection] New state: ' + state + ' Reason: ' + reason);
 });
