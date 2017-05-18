@@ -25,11 +25,10 @@ module.exports = function(server) {
   wss.on('connection', function(ws, req) {
 
     // generate an id for the socket
-    var wsId = uuid();
-
-    debug('A new client (%s) connected.', wsId);
-
+    ws.id = uuid();
     ws.isAlive = true;
+
+    debug('A new client (%s) connected.', ws.id);
 
     ws.on('message', function(data) {
       var connectionIndex;
@@ -40,17 +39,17 @@ module.exports = function(server) {
       // we keep sending id along with an empty connections array
       if (!data.id) {
         ws.send(JSON.stringify({
-          id: wsId,
-          sourceId: wsId,
+          id: ws.id,
+          sourceId: ws.id,
           connections: []
         }));
 
         return;
       } else {
         // If session/connection isn't registered yet, register it
-        if (!sessions[wsId]) {
+        if (!sessions[ws.id]) {
           // Override/refresh connection id
-          data.id = wsId;
+          data.id = ws.id;
 
           // Push/add connection to connections hashtable
           connections.push(data);
@@ -81,11 +80,11 @@ module.exports = function(server) {
 
     ws.on('close', function(code, reason) {
 
-      debug('Client connection closed (%s). (Code: %s, Reason: %s)', wsId, code, reason);
+      debug('Client connection closed (%s). (Code: %s, Reason: %s)', ws.id, code, reason);
 
       // Find connection index and remove it from hashtable
       if (~(connectionIndex = _.findIndex(connections, {
-          'id': wsId
+          'id': ws.id
         }))) {
 
         debug('Connection removed:\n%O', connections[connectionIndex]);
@@ -94,17 +93,17 @@ module.exports = function(server) {
       }
 
       // Remove session from sessions hashtable
-      delete sessions[wsId];
+      delete sessions[ws.id];
 
       // Notify all connections
-      notifyConnections(wsId);
+      notifyConnections(ws.id);
     });
 
     ws.on('error', function(error) {
-      debug('Client connection errored (%s). (Error: %s)', wsId, error);
+      debug('Client connection errored (%s). (Error: %s)', ws.id, error);
 
       if (~(connectionIndex = _.findIndex(connections, {
-          'id': wsId
+          'id': ws.id
         }))) {
 
         debug('Errored connection:\n%O', connections[connectionIndex]);
@@ -112,7 +111,7 @@ module.exports = function(server) {
     });
 
     ws.on('pong', function(data, flags) {
-      debug('Pong received. (%s)', wsId);
+      debug('Pong received. (%s)', ws.id);
       ws.isAlive = true;
     });
 
@@ -125,7 +124,7 @@ module.exports = function(server) {
 
       ws.isAlive = false;
       ws.ping('', false, true);
-      debug('Ping sent.');
+      debug('Ping sent. (%s)', ws.id);
     });
   }, 30000);
 
