@@ -64,3 +64,16 @@ button#connect-btn {
 #users-panel .user-data > div {
   flex-grow: 1;
 }
+
+.socket-indicator {
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  margin-right: 5px;
+  border-radius: 5px;
+  vertical-align: baseline;
+}
+
+.socket-state {
+  text-transform: capitalize;
+}

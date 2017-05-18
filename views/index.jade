@@ -5,9 +5,21 @@ block content
     .info-container
       h1.title quill-sharedb-cursors
       p Collaborative editing example with Quill and cursors.
-      
+
+      h3 Sockets
+      p
+        strong ShareDB:
+        |  
+        span#sharedb-socket-indicator.socket-indicator
+        span#sharedb-socket-state.socket-state
+      p
+        strong Cursors:
+        |  
+        span#cursors-socket-indicator.socket-indicator
+        span#cursors-socket-state.socket-state
+
       #connect-panel
-        h4 Username
+        h3 Username
         form#username-form
           | Set your username and connect to edit:
           br
@@ -15,7 +27,7 @@ block content
           br
           button#connect-btn Connect
       #users-panel
-        h4 Users editing
+        h3 Users editing
         ul#users-list
     .editor-container
       #editor

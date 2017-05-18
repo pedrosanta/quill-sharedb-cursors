@@ -6,7 +6,7 @@ var cursors = require('./cursors');
 
 ShareDB.types.register(require('rich-text').type);
 
-var shareDBSocket = new WebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/sharedb');
+var shareDBSocket = new ReconnectingWebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/sharedb');
 
 var shareDBConnection = new ShareDB.Connection(shareDBSocket);
 
@@ -180,6 +180,29 @@ document.getElementById('username-form').addEventListener('submit', function(eve
 
 // DEBUG
 
+var sharedbSocketStateEl = document.getElementById('sharedb-socket-state');
+var sharedbSocketIndicatorEl = document.getElementById('sharedb-socket-indicator');
+
 shareDBConnection.on('state', function (state, reason) {
-  console.log('[sharedb connection] New state: ' + state + ' Reason: ' + reason);
+  var indicatorColor;
+
+  console.log('[sharedb] New connection state: ' + state + ' Reason: ' + reason);
+
+  sharedbSocketStateEl.innerHTML = state.toString();
+
+  switch(state.toString()) {
+    case 'connecting':
+      indicatorColor = 'silver';
+      break;
+    case 'connected':
+      indicatorColor = 'lime';
+      break;
+    case 'disconnected':
+    case 'closed':
+    case 'stopped':
+      indicatorColor = 'red';
+      break;
+  }
+
+  sharedbSocketIndicatorEl.style.backgroundColor = indicatorColor;
 });

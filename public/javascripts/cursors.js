@@ -2,6 +2,9 @@ var ReconnectingWebSocket = require('reconnectingwebsocket');
 
 var cursors = {};
 
+var socketStateEl = document.getElementById('cursors-socket-state');
+var socketIndicatorEl = document.getElementById('cursors-socket-indicator');
+
 function CursorConnection(name, color) {
   this.id = null;
   this.name = name;
@@ -9,7 +12,9 @@ function CursorConnection(name, color) {
 }
 
 // Create browserchannel socket
-cursors.socket = new WebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/cursors');
+cursors.socket = new ReconnectingWebSocket(((location.protocol === 'https:') ? 'wss' : 'ws') + '://' + window.location.host + '/cursors');
+socketStateEl.innerHTML = 'connecting';
+socketIndicatorEl.style.backgroundColor = 'silver';
 
 // Init a blank user connection to store local conn data
 cursors.localConnection = new CursorConnection(
@@ -33,6 +38,8 @@ cursors.connectionColors = {};
 // Send initial message to register the client, and
 // retrieve a list of current clients so we can set a colour.
 cursors.socket.onopen = function() {
+  socketStateEl.innerHTML = 'connected';
+  socketIndicatorEl.style.backgroundColor = 'lime';
   cursors.update();
 };
 
@@ -110,10 +117,14 @@ cursors.socket.onmessage = function(message) {
 
 cursors.socket.onclose = function (event) {
   console.log('[cursors] Socket closed. Event:', event);
+  socketStateEl.innerHTML = 'closed';
+  socketIndicatorEl.style.backgroundColor = 'red';
 };
 
 cursors.socket.onerror = function (event) {
   console.log('[cursors] Error on socket. Event:', event);
+  socketStateEl.innerHTML = 'error';
+  socketIndicatorEl.style.backgroundColor = 'red';
 };
 
 module.exports = cursors;
