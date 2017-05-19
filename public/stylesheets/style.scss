@@ -1,10 +1,14 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 input#username-input {
@@ -33,7 +37,7 @@ button#connect-btn {
 }
 
 .editor-container {
-  flex-grow: 1;
+  width: 80%;
 }
 
 #users-panel {

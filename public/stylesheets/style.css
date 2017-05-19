@@ -1,9 +1,12 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font: 13px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 a {
-  color: #00B7FF; }
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: underline; }
 
 input#username-input {
   box-sizing: border-box;
@@ -26,7 +29,7 @@ button#connect-btn {
   margin-right: 50px; }
 
 .editor-container {
-  flex-grow: 1; }
+  width: 80%; }
 
 #users-panel {
   display: none; }
