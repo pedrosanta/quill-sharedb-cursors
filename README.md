@@ -1,5 +1,9 @@
 # Quill-ShareDB-Cursors
-An implementation of concurrent user editing with cursor sync using [Quill](https://github.com/quilljs/quill) and [ShareDB](https://github.com/share/sharedb).
+An attempt at multi cursors sync in a collaborative editing scenario using [Quill](https://quilljs.com/) and [ShareDB](https://github.com/share/sharedb).
+
+Implemented by @pedrosanta while working at [Reedsy](https://reedsy.com/#/freelancers).
+
+Check out a working demo at [](https://quill-sharedb-cursors.herokuapp.com).
 
 ## TODO
 
