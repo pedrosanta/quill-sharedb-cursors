@@ -162,7 +162,12 @@ The data each cursor is sending and syncing is:
 
 ## Known Issues
 
-To complete.
+For the most of the time the editor and cursor sync seem to behave as it should be expected. But on a few cases the cursor position gets misplaced - I have a strong suspicion the cause are racing conditions, as these issues are hard to replicate, occur sometimes, and usually involve two or more people typing at the same time.
+
+The main issues currently identified in this example, are:
+
+* [**Selection/cursor-change and edits racing condition #1**](https://github.com/pedrosanta/quill-sharedb-cursors/issues/1): When editing/inserting text immediatly after caret position moves with the arrow keys, can lead to cursor being misplaced (leading it to be stuck on the wrong position);
+* [**Cursor misplacement on concurrent editing with 'Enter'/new lines #2**](https://github.com/pedrosanta/quill-sharedb-cursors/issues/2): Sometimes, when two users are editing, and one of them adds a few new lines, its cursor gets shifted by a few positions (usually, 1-3 positions forward); 
 
 ## TODO
 
