@@ -7,12 +7,12 @@ A working demo is available at: https://quill-sharedb-cursors.herokuapp.com
 
 **Contents:**
 
-* How to run
-* Ongoing Quill cursor efforts and discussion
-* About this project
-* Known Issues
-* TODO
-* License
+* [How to run](#how-to-run)
+* [Ongoing Quill cursor efforts and discussion](#ongoing-quill-cursor-efforts-and-discussion)
+* [About this project](#about-this-project)
+* [Known Issues](#known-issues)
+* [TODO](#todo)
+* [License](#license)
 
 ## How to run
 
