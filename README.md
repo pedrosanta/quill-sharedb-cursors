@@ -5,6 +5,15 @@ Built by [pedrosanta](https://github.com/pedrosanta) at [Reedsy](https://reedsy.
 
 A working demo is available at: https://quill-sharedb-cursors.herokuapp.com
 
+**Contents:**
+
+* How to run
+* Ongoing Quill cursor efforts and discussion
+* About this project
+* Known Issues
+* TODO
+* License
+
 ## How to run
 
 Before trying to run this example, make sure you have **[Node](https://nodejs.org/)** v6 LTS (recommended) or earlier installed.
@@ -13,7 +22,7 @@ Before trying to run this example, make sure you have **[Node](https://nodejs.or
 node -v
 ```
 
-Opted to have **[MongoDB](https://www.mongodb.com)** storage for this particular example, so make sure you it's installed and running. Alternatively, if you have [Docker](https://www.docker.com) installed you can spin an instance quickly by running the command:
+Opted to have **[MongoDB](https://www.mongodb.com)** storage for this particular example, so make sure it's installed and running. Alternatively, if you have [Docker](https://www.docker.com) installed you can spin an instance quickly by running the command:
 
 ``` Shell
 docker run -p 27017:27017 mongo
@@ -47,7 +56,7 @@ For a proper multi cursor feature the following is usually considered:
 * Quill is a library for a rich-text editor _focused solely on the **front-end** side_, so concerns related to keeping **multi-user document and cursor in sync** should be implemented with the help of additional middleware and backend technology/code (being [ShareDB](https://github.com/share/sharedb) the most obvious one, but there are others like [Meteor](https://www.meteor.com), or even your own, etc.);
 * Given that, and in what it concerns Quill, the best approach is through a **cursors module** (optional, extends Quill functionality) providing an API to set/update/remove cursors while also being responsible to automatically update cursors position when contents are changed/updated;
 
-For more info on how the various communities are coordinating and working towards this, keep reading below.
+For more info on how the various efforts/communities are coordinating and working towards this, keep reading below.
 
 ### Quill and cursor module
 
@@ -63,7 +72,7 @@ During the discussion [benbro](https://github.com/benbro) updated the old v0.20 
 
 * https://github.com/benbro/quill/tree/multi-cursor
 
-Additionally, and based off the work it has been done over at [Reedsy](https://reedsy.com) related to multi cursor sync (*both for carets and selections*) built on top of the v0.20 of Quill, the multi cursors module was published and made available as a way to contribute to the community and help this effort move forward:
+Additionally, and based on the work it has been done over at [Reedsy](https://reedsy.com) related to multi cursor sync (*both for carets and selections*) built on top of the v0.20 of Quill, the multi cursors module was published and made available as a way to contribute to the community and help this effort move forward:
 
 * **GitHub: https://github.com/reedsy/quill-cursors**
 * **NPM: https://www.npmjs.com/package/quill-cursors**
@@ -74,15 +83,82 @@ To check where the efforts for multi cursor sync on middleware/backend stand at 
 
 ### ShareDB
 
-To complete.
+In what regards to ShareDB, the issue where the current discussion and effort is being handled is the following:
 
-### Other backends (Yjs)
+* **[share/sharedb#128 - Add cursor synchronization to an editor](https://github.com/share/sharedb/issues/128)**
 
-To complete.
+[nateps](https://github.com/nateps), the main contributor to the project, [puts this high on the priority list and expands a bit on **ephemeral data** concept](https://github.com/share/sharedb/issues/128#issuecomment-252152894), that would benefit a cursor sync feature.
+
+Additionally, there seems to be a lot of history on the discussion of this feature both on [ShareJS/ShareDB mailing list](https://groups.google.com/forum/#!searchin/sharejs/cursor%7Csort:relevance), as well as [ShareJS GitHub issue tracker](https://github.com/josephg/ShareJS/issues?utf8=✓&q=cursor).
+
+### Other backends (Meteor, Yjs)
+
+There are sparse cases of Quill working with other backends, namely [Meteor](https://www.meteor.com) and [Yjs](http://y-js.org).
+
+On Meteor thought, haven't found any information of an effort regarding multi cursors discussion or implementation.
+
+As for Yjs, [Joeao](https://github.com/Joeao) seems to have had cursors working in the past ([y-js/yjs#65](https://github.com/y-js/yjs/issues/65)).
 
 ## About this project
 
-To complete.
+Overview and notes on some decisions taken to build the example project.
+
+### Transport Layer (WebSockets, reconnecting)
+
+Although ShareDB [relatively bare documentation](https://github.com/share/sharedb#listening-to-websocket-connections) [on transport layer](https://github.com/share/sharedb#client-api) is shown to use WebSockets, looking into its [source code](https://github.com/share/sharedb/blob/master/lib/client/connection.js), one can see that any WebSocket API-compatible transport layer will work.
+
+In the past ShareJS and LiveDB (earlier ShareDB) recommended **[node-browserchannel](https://github.com/josephg/node-browserchannel)** - which was pretty good, as it reconnected seamlessly, but it resorted to *long-polling*. But as a note on its README says, WebSocket support is now reasonably universal, and strongly suggests using raw websockets for new projects.
+
+But by using bare WebSockets, we don't have any connection interruption/reconnection mechanism in place out-of-the-box.
+
+So for this project, **[reconnecting-websocket](https://github.com/joewalnes/reconnecting-websocket)** was used, along [some ping/keep-alive code](https://github.com/pedrosanta/quill-sharedb-cursors/blob/master/helpers/wss-sharedb.js#L29) to help manage the connection 'health'/availability - and keep about the same functionality of browserchannel on this aspect.
+
+<u>Keep in mind</u> that ShareDB Connection does not handle WebSocket/transport reconnections, but it will resubscribe any document and sync pending/offline updates upon socket reconnection. For more on that check **[share/sharedb#121](https://github.com/share/sharedb/issues/121)** and **[share/sharedb#138](https://github.com/share/sharedb/pull/138)**.
+
+#### Socket.io
+
+Socket.io isn't WebSocket API-compatible, so won't work without some sort of wrapper implementing it, it seems. Also there is a  warning on ShareJS documentation regarding Socket.io that it sometimes [doesn't guarantee in-order message delivery](https://github.com/josephg/ShareJS/blob/master/README.md#client-server-communication). Checking [josephg/ShareJS#375](https://github.com/josephg/ShareJS/issues/375) gives some more insight into it, which points to some feasibility as long as **only** 'websocket' transport is used and probably configured **without transport upgrade** on Socket.io/Engine.io.
+
+Eitherway, ShareDB Socket.io support is a poor/unknown at best and without thorough testing. If you manage to get a good working example with ShareDB and Socket.io, please share away!
+
+### Storage, MongoDB
+
+For this example, simple `ShareDB.MemoryDB` (or even [`ShareDBMingoMemory`](https://github.com/share/sharedb-mingo-memory)) adapter would suffice, but because I wanted this to keep close to a scenario I'm working at the moment, opted to test this in tandem with MongoDB and [`ShareDBMongo`](https://github.com/share/sharedb-mongo) adapter.
+
+### Explicitly register rich-text OT type
+
+Another aspect to keep in mind is that `rich-text` doesn't come registered by default as an available OT type on ShareDB, so we need to:
+
+1. Include **[ottypes/rich-text](https://github.com/ottypes/rich-text)** as dependency (as well as make it available/bundled for client);
+2. **Register** `rich-text` type both **[on Server](https://github.com/pedrosanta/quill-sharedb-cursors/blob/master/helpers/sharedb-server.js#L3)** and **[on Client](https://github.com/pedrosanta/quill-sharedb-cursors/blob/master/public/javascripts/main.js#L7)**;
+
+### Quill-ShareDB client listeners
+
+The basics about having ShareDB and Quill working together rely on listening to two events:
+
+* For *local changes/updates that must be transmitted to server*, [listen on Quill `text-change` event and, for user changes, submit the operation to ShareDB document](https://github.com/share/sharedb/blob/master/examples/rich-text/client.js#L25);
+* For *changes/updates sent by the server to be applied locally*, [listen on ShareDB document `op` event and, for non local update sources, call Quill `updateContents(…)`](https://github.com/share/sharedb/blob/master/examples/rich-text/client.js#L29);
+
+### Cursor server and client middleware
+
+There are several ways one could implement cursor sync behaviour, but in this case this implementation has the following components:
+
+* **[`helpers/wss-cursors.js`](https://github.com/pedrosanta/quill-sharedb-cursors/blob/master/helpers/wss-cursors.js)** - A server part that:
+  * Maintains a list of active connections;
+  * Listens for update messages (through WebSockets);
+  * And broadcasts an update as well as the list of active connections to all connected clients upon receiving an update from a client;
+* **[`public/javascripts/cursors.js`](https://github.com/pedrosanta/quill-sharedb-cursors/blob/master/public/javascripts/cursors.js)** - A client part that:
+  * Inits and holds client own cursor information;
+  * Maintains a list of the active cursors/clients, based off the updates received from the server;
+  * Sends an update of own cursor information, fired when a Quill `selection-change` event fires;
+  * Fires a 'cursors updated' event (when a cursors update message is received from server) so Quill instances can update their cursors using the cursors module API;
+
+The data each cursor is sending and syncing is:
+
+* **`id`**, the cursor/client id autogenerated by the server;
+* **`name`**, the name to display on the cursor;
+* **`color`**, CSS color of the cursor;
+* **`range`**, the current range from the client, obtained from `quill.getSelection()`;
 
 ## Known Issues
 
