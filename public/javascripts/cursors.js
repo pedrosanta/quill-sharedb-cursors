@@ -46,7 +46,7 @@ cursors.socket.onopen = function() {
 // Handle updates
 cursors.socket.onmessage = function(message) {
 
-  data = JSON.parse(message.data);
+  var data = JSON.parse(message.data);
 
   var source = {},
     removedConnections = [],
@@ -127,4 +127,4 @@ cursors.socket.onerror = function (event) {
   socketIndicatorEl.style.backgroundColor = 'red';
 };
 
-export default cursors;
+module.exports = cursors;
