@@ -1,8 +1,9 @@
 var ShareDB = require('sharedb/lib/client');
-var Quill = require('quill');
+var Quill = require('Quill');
 var QuillCursors = require('quill-cursors');
 var ReconnectingWebSocket = require('reconnectingwebsocket');
 var cursors = require('./cursors');
+var utils = require('./utils');
 
 ShareDB.types.register(require('rich-text').type);
 
@@ -72,6 +73,18 @@ doc.subscribe(function(err) {
     cursors.localConnection.range = range;
     cursors.update();
   }
+
+  //
+  var debouncedSendCursorData = utils.debounce(function() {
+    var range = quill.getSelection();
+
+    if (range) {
+      console.log('[cursors] Stopped typing, sending a cursor update/refresh.');
+      sendCursorData(range);
+    }
+  }, 1500);
+
+  doc.on('nothing pending', debouncedSendCursorData);
 
   function updateCursors(source) {
     var activeConnections = {},
@@ -183,14 +196,14 @@ document.getElementById('username-form').addEventListener('submit', function(eve
 var sharedbSocketStateEl = document.getElementById('sharedb-socket-state');
 var sharedbSocketIndicatorEl = document.getElementById('sharedb-socket-indicator');
 
-shareDBConnection.on('state', function (state, reason) {
+shareDBConnection.on('state', function(state, reason) {
   var indicatorColor;
 
   console.log('[sharedb] New connection state: ' + state + ' Reason: ' + reason);
 
   sharedbSocketStateEl.innerHTML = state.toString();
 
-  switch(state.toString()) {
+  switch (state.toString()) {
     case 'connecting':
       indicatorColor = 'silver';
       break;
