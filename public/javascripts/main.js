@@ -1,9 +1,9 @@
-var ShareDB = require('sharedb/lib/client');
-var Quill = require('quill');
-var QuillCursors = require('quill-cursors');
-var ReconnectingWebSocket = require('reconnectingwebsocket');
-var cursors = require('./cursors');
-var utils = require('./utils');
+import ShareDB from 'sharedb/lib/client';
+import Quill from 'quill';
+import QuillCursors from 'quill-cursors';
+import ReconnectingWebSocket from 'reconnectingwebsocket';
+import cursors from './cursors' ;
+import utils from './utils';
 
 ShareDB.types.register(require('rich-text').type);
 

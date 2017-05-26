@@ -127,4 +127,4 @@ cursors.socket.onerror = function (event) {
   socketIndicatorEl.style.backgroundColor = 'red';
 };
 
-module.exports = cursors;
+export default cursors;
