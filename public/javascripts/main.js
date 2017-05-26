@@ -1,5 +1,5 @@
 var ShareDB = require('sharedb/lib/client');
-var Quill = require('Quill');
+var Quill = require('quill');
 var QuillCursors = require('quill-cursors');
 var ReconnectingWebSocket = require('reconnectingwebsocket');
 var cursors = require('./cursors');
