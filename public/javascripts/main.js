@@ -16,6 +16,9 @@ var quill = window.quill = new Quill('#editor', {
   modules: {
     cursors: {
       autoRegisterListener: false
+    },
+    history: {
+      userOnly: true
     }
   },
   readOnly: true
