@@ -93,11 +93,11 @@ Additionally, there seems to be a lot of history on the discussion of this featu
 
 ### Other backends (Meteor, Yjs)
 
-There are sparse cases of Quill working with other backends, namely [Meteor](https://www.meteor.com) and [Yjs](http://y-js.org).
+There are some cases of Quill working with other backends, namely [Meteor](https://www.meteor.com) and [Yjs](http://y-js.org).
 
 On Meteor thought, haven't found any information of an effort regarding multi cursors discussion or implementation.
 
-As for Yjs, [Joeao](https://github.com/Joeao) seems to have had cursors working in the past ([y-js/yjs#65](https://github.com/y-js/yjs/issues/65), [y-js/y-richtext#112](https://github.com/y-js/y-richtext/issues/112)).
+As for Yjs, [Joeao](https://github.com/Joeao) seems to be leading an effort to have multi cursors working ([y-js/yjs#65](https://github.com/y-js/yjs/issues/65), [y-js/y-richtext#112](https://github.com/y-js/y-richtext/issues/112)).
 
 ## About this project
 
