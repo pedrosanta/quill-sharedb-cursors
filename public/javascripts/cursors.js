@@ -32,9 +32,6 @@ cursors.update = function() {
 // Init connections array
 cursors.connections = [];
 
-// Init connection colors
-cursors.connectionColors = {};
-
 // Send initial message to register the client, and
 // retrieve a list of current clients so we can set a colour.
 cursors.socket.onopen = function() {
