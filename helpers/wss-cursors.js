@@ -110,7 +110,7 @@ module.exports = function(server) {
       }
     });
 
-    ws.on('pong', function(data, flags) {
+    ws.on('pong', function(data) {
       debug('Pong received. (%s)', ws.id);
       ws.isAlive = true;
     });
