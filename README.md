@@ -16,7 +16,7 @@ A working demo is available at: https://quill-sharedb-cursors.herokuapp.com
 
 ## How to run
 
-Before trying to run this example, make sure you have **[Node](https://nodejs.org/)** v6 LTS (recommended) or earlier installed.
+Before trying to run this example, make sure you have a fairly recent (6 LTS or earlier) version of **[Node](https://nodejs.org/)**.
 
 ```sh
 node -v
@@ -167,7 +167,7 @@ For the most of the time the editor and cursor sync seem to behave as it should 
 The main issues currently identified in this example, are:
 
 * [**Selection/cursor-change and edits racing condition #1**](https://github.com/pedrosanta/quill-sharedb-cursors/issues/1): When editing/inserting text immediatly after caret position moves with the arrow keys, can lead to cursor being misplaced (leading it to be stuck on the wrong position);
-* [**Cursor misplacement on concurrent editing with 'Enter'/new lines #2**](https://github.com/pedrosanta/quill-sharedb-cursors/issues/2): Sometimes, when two users are editing, and one of them adds a few new lines, its cursor gets shifted by a few positions (usually, 1-3 positions forward); 
+* [**Cursor misplacement on concurrent editing with 'Enter'/new lines #2**](https://github.com/pedrosanta/quill-sharedb-cursors/issues/2): Sometimes, when two users are editing, and one of them adds a few new lines, its cursor gets shifted by a few positions (usually, 1-3 positions forward);
 
 ## TODO
 
