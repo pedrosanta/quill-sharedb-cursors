@@ -32,9 +32,9 @@
     "sharedb-mongo": "^1.0.0-beta.3",
     "uuid": "^3.2.1",
     "websocket-json-stream": "0.0.3",
+    "webpack": "^3.10.0",
     "ws": "^4.0.0"
   },
   "devDependencies": {
-    "webpack": "^3.10.0"
   }
 }
