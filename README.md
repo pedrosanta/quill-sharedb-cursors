@@ -16,7 +16,7 @@ A working demo is available at: https://quill-sharedb-cursors.herokuapp.com
 
 ## How to run
 
-Before trying to run this example, make sure you have a fairly recent (6 LTS or earlier) version of **[Node](https://nodejs.org/)**.
+Before trying to run this example, make sure you have a fairly recent (6 LTS or earlier, 8 LTS recommended) version of **[Node](https://nodejs.org/)**.
 
 ```sh
 node -v

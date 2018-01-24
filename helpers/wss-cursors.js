@@ -123,7 +123,7 @@ module.exports = function(server) {
       if (ws.isAlive === false) return ws.terminate();
 
       ws.isAlive = false;
-      ws.ping('', false, true);
+      ws.ping();
       debug('Ping sent. (%s)', ws.id);
     });
   }, 30000);

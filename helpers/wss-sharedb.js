@@ -24,6 +24,10 @@ module.exports = function(server) {
       debug('Pong received. (%s)', ws.id);
       ws.isAlive = true;
     });
+
+    ws.on('error', function(error) {
+      debug('Client connection errored (%s). (Error: %s)', ws.id, error);
+    });
   });
 
   // Sockets Ping, Keep Alive
@@ -32,7 +36,7 @@ module.exports = function(server) {
       if (ws.isAlive === false) return ws.terminate();
 
       ws.isAlive = false;
-      ws.ping('', false, true);
+      ws.ping();
       debug('Ping sent. (%s)', ws.id);
     });
   }, 30000);
