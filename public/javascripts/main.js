@@ -47,7 +47,17 @@ doc.subscribe(function(err) {
   quill.on('text-change', function(delta, oldDelta, source) {
     if (source == 'user') {
 
-      if (cursors.localConnection.range && cursors.localConnection.range.length) {
+      // Check if it's a formatting-only delta
+      var formattingDelta = delta.reduce(function (check, op) {
+        return (op.insert || op.delete) ? false : check;
+      }, true);
+
+      // If it's not a formatting-only delta, collapse local selection
+      if (
+        !formattingDelta &&
+        cursors.localConnection.range &&
+        cursors.localConnection.range.length
+      ) {
         cursors.localConnection.range.index += cursors.localConnection.range.length;
         cursors.localConnection.range.length = 0;
         cursors.update();
